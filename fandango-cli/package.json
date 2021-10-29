@@ -23,7 +23,10 @@
     "path-to-regexp": "2.4.0",
     "vue": "2.6.10",
     "vue-router": "3.0.6",
-    "vuex": "3.1.0"
+    "vue-splitpane": "^1.0.6",
+    "vue2-dropzone": "^3.6.0",
+    "vuex": "3.1.0",
+    "xlsx": "^0.17.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "4.4.4",
