@@ -46,37 +46,19 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/root',
     hidden: true,
     children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      path: 'root',
+      name: 'Root',
+      component: () => import('@/views/root/index'),
+      meta: { title: 'Root', icon: 'root' }
     }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    hidden: true,
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      }
-    ]
   },
 
   {
     path: '/form',
     component: Layout,
-    hidden: true,
     children: [
       {
         path: 'index',
@@ -88,47 +70,14 @@ export const constantRoutes = [
   },
 
   {
-    path: '/excel',
-    component: Layout,
-    hidden: true,
-    redirect: '/excel/export-excel',
-    name: 'Excel',
-    meta: {
-      title: 'Excel',
-      icon: 'excel'
-    },
-    children: [
-      {
-        path: 'upload-excel',
-        component: () => import('@/views/excel/upload-excel'),
-        name: 'UploadExcel',
-        meta: { title: 'Upload Excel' }
-      }
-    ]
-  },
-
-  {
     path: '/ocr',
     component: Layout,
     children: [
       {
         path: 'index',
         name: 'OcrSplineDemo',
-        component: () => import('@/views/ocr/index-from'),
-        meta: { title: 'OCR识别', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/ocr',
-    component: Layout,
-    children: [
-      {
-        path: 'layout',
-        name: 'OcrSpline-layout',
         component: () => import('@/views/ocr/index'),
-        meta: { title: '布局', icon: 'form' }
+        meta: { title: 'OCR识别', icon: 'form' }
       }
     ]
   },
