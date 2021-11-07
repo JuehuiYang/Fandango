@@ -45,7 +45,7 @@ export default {
       const rawFile = files[0] // only use files[0]
 
       if (!this.isExcel(rawFile)) {
-        this.$message.error('Only supports upload .xlsx, .xls, .csv suffix files')
+        this.$message.error('Only supports upload.vue .xlsx, .xls, .csv suffix files')
         return false
       }
       this.upload(rawFile)

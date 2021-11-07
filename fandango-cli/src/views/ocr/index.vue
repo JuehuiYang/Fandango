@@ -2,59 +2,56 @@
   <div class="app-container">
     <el-card style="margin-top: 10px">
       <el-steps :active="active" simple>
-        <el-step title="设置关键词" icon="shezhi1"></el-step>
-        <el-step title="提交pdf" icon="el-icon-upload"></el-step>
-        <el-step title="OCR识别" icon="el-icon-picture"></el-step>
+        <el-step title="设置关键词" icon="shezhi1" />
+        <el-step title="提交pdf" icon="el-icon-upload" />
+        <el-step title="OCR识别" icon="el-icon-picture" />
       </el-steps>
       <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
     </el-card>
-    <el-row align="top">
-      <el-card v-show="active === 0" class="card">
-        <el-form ref="form" :model="form">
-          <el-form-item label="设置关键词">
-            <tag-form/>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">提交</el-button>
-            <el-button @click="onCancel">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-      <el-card v-show="active === 1" class="card">
-        <p>文件上传</p>
-        <el-upload
-          class="upload-demo"
-          drag
-          action="https://jsonplaceholder.typicode.com/posts/"
-          multiple
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div class="el-upload__tip" slot="tip">只能上传pdf文件，且不超过2M</div>
-        </el-upload>
-      </el-card>
-      <el-card v-show="active === 2" class="card">
-        <p>展示OCR进度</p>
-        <el-progress :text-inside="true" :stroke-width="26" :percentage="70"></el-progress>
-        <el-progress :text-inside="true" :stroke-width="24" :percentage="100" status="success"></el-progress>
-        <el-progress :text-inside="true" :stroke-width="22" :percentage="80" status="warning"></el-progress>
-        <el-progress :text-inside="true" :stroke-width="20" :percentage="50" status="exception"></el-progress>
-      </el-card>
-      <el-card v-show="active === 3" class="card">
-        <span>1. 结果展示</span>
-        <el-divider></el-divider>
-        <span>2. 评分</span>
-        <el-divider></el-divider>
-        <span>3. 关键词出现次数</span>
-        <el-divider></el-divider>
-        <el-form ref="form" :model="form">
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">获取识别结果-PDF</el-button>
-            <el-button type="primary" @click="onSubmit">获取识别结果-TXT</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-    </el-row>
+    <el-card v-show="active === 0" class="box">
+      <el-form ref="form" :model="form">
+        <el-form-item label="设置关键词">
+          <tag-form />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button @click="onCancel">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <el-card v-show="active === 1" class="box">
+      <el-upload
+        class="upload-demo"
+        drag
+        action="https://jsonplaceholder.typicode.com/posts/"
+        multiple
+      >
+        <i class="el-icon-upload" />
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过2M</div>
+      </el-upload>
+    </el-card>
+    <el-card v-show="active === 2">
+      <p>展示OCR进度</p>
+      <el-progress :text-inside="true" :stroke-width="26" :percentage="70" />
+      <el-progress :text-inside="true" :stroke-width="24" :percentage="100" status="success" />
+      <el-progress :text-inside="true" :stroke-width="22" :percentage="80" status="warning" />
+      <el-progress :text-inside="true" :stroke-width="20" :percentage="50" status="exception" />
+    </el-card>
+    <el-card v-show="active === 3">
+      <span>1. 结果展示</span>
+      <el-divider />
+      <span>2. 评分</span>
+      <el-divider />
+      <span>3. 关键词出现次数</span>
+      <el-divider />
+      <el-form ref="form" :model="form">
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">获取识别结果-PDF</el-button>
+          <el-button type="primary" @click="onSubmit">获取识别结果-TXT</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
@@ -62,7 +59,9 @@
 import TagForm from '@/views/ocr/components/tag'
 
 export default {
-  components: { TagForm },
+  components: {
+    TagForm
+  },
   data() {
     return {
       active: 0,
@@ -96,7 +95,10 @@ export default {
 </script>
 
 <style scoped>
-.card {
+.box {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
   margin-top: 10px;
   min-height: 500px;
   min-width: 100%;
