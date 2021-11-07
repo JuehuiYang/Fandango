@@ -8,7 +8,7 @@
       </el-steps>
       <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
     </el-card>
-    <el-card v-show="active === 0" class="box">
+    <el-card v-show="active === 0" style="margin-top: 10px">
       <el-form ref="form" :model="form">
         <el-form-item label="设置关键词">
           <tag-form />
@@ -20,25 +20,16 @@
       </el-form>
     </el-card>
     <el-card v-show="active === 1" class="box">
-      <el-upload
-        class="upload-demo"
-        drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        multiple
-      >
-        <i class="el-icon-upload" />
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div slot="tip" class="el-upload__tip">只能上传pdf文件，且不超过2M</div>
-      </el-upload>
+      <upload />
     </el-card>
-    <el-card v-show="active === 2">
+    <el-card v-show="active === 2" style="margin-top: 10px">
       <p>展示OCR进度</p>
       <el-progress :text-inside="true" :stroke-width="26" :percentage="70" />
       <el-progress :text-inside="true" :stroke-width="24" :percentage="100" status="success" />
       <el-progress :text-inside="true" :stroke-width="22" :percentage="80" status="warning" />
       <el-progress :text-inside="true" :stroke-width="20" :percentage="50" status="exception" />
     </el-card>
-    <el-card v-show="active === 3">
+    <el-card v-show="active === 3" style="margin-top: 10px">
       <span>1. 结果展示</span>
       <el-divider />
       <span>2. 评分</span>
@@ -57,10 +48,12 @@
 
 <script>
 import TagForm from '@/views/ocr/components/tag'
+import Upload from '@/views/ocr/components/upload'
 
 export default {
   components: {
-    TagForm
+    TagForm,
+    Upload
   },
   data() {
     return {
