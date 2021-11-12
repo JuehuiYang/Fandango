@@ -34,6 +34,7 @@ import tools.infer.predict_cls as predict_cls
 from ppocr.utils.utility import get_image_file_list, check_and_read_gif
 from ppocr.utils.logging import get_logger
 from tools.infer.utility import draw_ocr_box_txt, get_rotate_crop_image
+
 logger = get_logger()
 
 
@@ -70,7 +71,7 @@ class TextSystem(object):
         for bno in range(len(dt_boxes)):
             tmp_box = copy.deepcopy(dt_boxes[bno])
             img_crop = get_rotate_crop_image(ori_im, tmp_box)
-            h,w,c=img_crop.shape
+            h, w, c = img_crop.shape
             img_crop_list.append(img_crop)
         if self.use_angle_cls and cls:
             img_crop_list, angle_list, elapse = self.text_classifier(
@@ -110,11 +111,14 @@ def sorted_boxes(dt_boxes):
             _boxes[i] = _boxes[i + 1]
             _boxes[i + 1] = tmp
     return _boxes
+
+
 from pdf._pdf2img import *
 from pdf._imgList import *
 
-def reg(args,IMG):
-    imglist=IMG.img_list
+
+def reg(args, IMG):
+    imglist = IMG.img_list
     text_sys = TextSystem(args)
     is_visualize = True
     font_path = args.vis_font_path
@@ -129,9 +133,9 @@ def reg(args,IMG):
     cpu_mem, gpu_mem, gpu_util = 0, 0, 0
     _st = time.time()
     count = 0
-    _l = ImgListWithTxt()#储存box图片
-    _r = ImgListWithTxt()#储存text图片
-    for idx,img in enumerate(imglist):
+    _l = ImgListWithTxt()  # 储存box图片
+    _r = ImgListWithTxt()  # 储存text图片
+    for idx, img in enumerate(imglist):
         if img is None:
             logger.info("error in loading image:{}".format(idx))
             continue
@@ -159,9 +163,9 @@ def reg(args,IMG):
                 drop_score=drop_score,
                 font_path=font_path)
 
-            _l.append(img_left,IMG.num2name[idx])
+            _l.append(img_left, IMG.num2name[idx])
             _l.append_txt(txts)
-            _r.append(img_right,IMG.num2name[idx])
+            _r.append(img_right, IMG.num2name[idx])
             _r.append_txt(txts)
             # draw_img_save = "./inference_results/"
             # if not os.path.exists(draw_img_save):
@@ -174,7 +178,9 @@ def reg(args,IMG):
 
     logger.info("The predict total time is {}".format(time.time() - _st))
     logger.info("\nThe predict total time is {}".format(total_time))
-    return _l,_r
+    return _l, _r
+
+
 def init_params():
     args = utility.parse_args()
     args.image_dir = "../../pdf/pdf_test/test1.pdf"
@@ -186,33 +192,37 @@ def init_params():
     args.rec_char_dict_path = "../../ppocr/utils/en_dict.txt"
     args.use_gpu = True
     return args
+
+
 from tools.infer.pdf_struct import pdf_struct
+
+
 def pdf2img2rec(pdf_path):
-    dimy=1
-    #切割图片
+    dimy = 1
+    # 切割图片
     pi = pdf2img_empty_cut_one()
     # pi=pdf2img_4cut()
     pi.set_slice(5)
-    pi.pdf_image(pdf_path, r"../../pdf/c/", 4,8, 0)
+    pi.pdf_image(pdf_path, r"../../pdf/c/", 4, 8, 0)
     # pi.pdf_image(r"./TheLittlePrince.pdf", r"./litt/", 10, 10, 0)
     pi.empty_cut()
-    slice=pi.slice
+    slice = pi.slice
     img = pi.IMG
-    #初始化参数
-    args=init_params()
-    #出图与文字
+    # 初始化参数
+    args = init_params()
+    # 出图与文字
     _l, _r = reg(args, img)
 
-    #合并
-    _l.set_pice(slice,dimy)
+    # 合并
+    _l.set_pice(slice, dimy)
     _l.setName("box")
     _l.rsz()
-    txt=_l.output_txt()
-    _r.set_pice(slice,dimy)
+    txt = _l.output_txt()
+    _r.set_pice(slice, dimy)
     _r.setName("text")
     _r.rsz()
-    #整合数据
-    output=pdf_struct()
+    # 整合数据
+    output = pdf_struct()
     output.add_boximg(_l.img_list)
     output.add_textimg(_r.img_list)
     output.set_txt(txt)
@@ -221,27 +231,30 @@ def pdf2img2rec(pdf_path):
     # r=output.img2pdf("text")
     # with open("box.pdf","wb") as f:
     #     f.write(r)
+
+
 def demo(pdf_st):
-    #输出文字
-    r=pdf_st.get_txt()
+    # 输出文字
+    r = pdf_st.get_txt()
     print(r)
 
-    #text pdf
-    r=pdf_st.img2pdf("text")
-    with open("text.pdf","wb") as f:
+    # text pdf
+    r = pdf_st.img2pdf("text")
+    with open("text.pdf", "wb") as f:
         f.write(r)
-    #box pdf
-    r=pdf_st.img2pdf("box")
-    with open("box.pdf","wb") as f:
+    # box pdf
+    r = pdf_st.img2pdf("box")
+    with open("box.pdf", "wb") as f:
         f.write(r)
-    #origin_pdf
-    r=pdf_st.img2pdf("origin")
-    with open("origin.pdf","wb") as f:
+    # origin_pdf
+    r = pdf_st.img2pdf("origin")
+    with open("origin.pdf", "wb") as f:
         f.write(r)
 
+
 if __name__ == "__main__":
-    pdf=r"../../pdf/pdf_test/TheLittlePrince.pdf"
-    with open(pdf,"rb") as f:
-        c=f.read()
-    output=pdf2img2rec(c)
+    pdf = r"../../pdf/pdf_test/TheLittlePrince.pdf"
+    with open(pdf, "rb") as f:
+        c = f.read()
+    output = pdf2img2rec(c)
     demo(output)
