@@ -253,7 +253,7 @@ def demo(pdf_st):
 
 
 if __name__ == "__main__":
-    pdf = r"../../pdf/pdf_test/TheLittlePrince.pdf"
+    pdf = r"../../pdf/pdf_test/test1.pdf"
     with open(pdf, "rb") as f:
         c = f.read()
     output = pdf2img2rec(c)
