@@ -18,14 +18,19 @@ def upload_file(request):
 
 # 接收上传的PDF文件及关键词
 @require_http_methods(["POST"])
-def upload_keyword(request):
+def upload_keyword(request, id):
     response = {}
     return JsonResponse(response)
 
 
 # 返回该pdf的评分及所有关键词出现的次数
-def get_rating_(request):
-    return JsonResponse("Hello, world. You\'re at the vote {} index.".format(id))
+@require_http_methods(["GET"])
+def get_rating(request, id):
+    data = {
+        'name': 'xxx.pdf',
+        'score': 5,
+    }
+    return JsonResponse(data)
 
 
 # 下载原pdf文件
