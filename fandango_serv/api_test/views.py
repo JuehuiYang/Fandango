@@ -38,4 +38,8 @@ def file_upload(request):
         error_msg = "异常"
     else:
         forms = FileUploadForm()
-    return render(request, 'test_file_upload.html', {'forms': forms, "error_msg": error_msg})
+    data = {
+        'name': 'xxx.pdf',
+        'score': 5,
+    }
+    return JsonResponse(data)
