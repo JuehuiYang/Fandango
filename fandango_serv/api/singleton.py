@@ -8,7 +8,6 @@ class Singleton(object):
     output_path = ''
 
     # 语句片段
-
     def foo(self):
         pass
 

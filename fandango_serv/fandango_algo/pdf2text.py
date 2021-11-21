@@ -1,9 +1,9 @@
 from mytools.infer.predict_system import *
 
 
-def reg_it(c, prefix):
+def reg_it(c, output_path, prefix):
     output = pdf2img2rec(c, prefix)
-    demo(output)
+    demo(output_path, output)
 
 
 if __name__ == '__main__':

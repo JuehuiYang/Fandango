@@ -233,22 +233,22 @@ def pdf2img2rec(pdf_path, prefix):
     #     f.write(r)
 
 
-def demo(pdf_st):
+def demo(output_path, pdf_st):
     # 输出文字
     r = pdf_st.get_txt()
     print(r)
 
     # text pdf
     r = pdf_st.img2pdf("text")
-    with open("text.pdf", "wb") as f:
+    with open(os.path.join(output_path, "text.pdf"), "wb") as f:
         f.write(r)
     # box pdf
     r = pdf_st.img2pdf("box")
-    with open("box.pdf", "wb") as f:
+    with open(os.path.join(output_path, "box.pdf"), "wb") as f:
         f.write(r)
     # origin_pdf
     r = pdf_st.img2pdf("origin")
-    with open("origin.pdf", "wb") as f:
+    with open(os.path.join(output_path, "origin.pdf"), "wb") as f:
         f.write(r)
 
 
@@ -257,4 +257,4 @@ if __name__ == "__main__":
     with open(pdf, "rb") as f:
         c = f.read()
     output = pdf2img2rec(c)
-    demo(output)
+    demo('./', output)

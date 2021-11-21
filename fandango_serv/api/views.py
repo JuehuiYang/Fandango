@@ -1,11 +1,11 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, StreamingHttpResponse
 import json
 
 # Create your views here.
 from api.forms import FileUploadForm
-from api.serv import handle_uploaded_file, setkeyword
+from api.serv import handle_uploaded_file, setkeyword, get_zip
 
 
 def index(request):
@@ -27,7 +27,6 @@ def upload_keyword(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def upload_file(request):
-    error_msg = ""
     forms = FileUploadForm(request.POST, request.FILES)
 
     if forms.is_valid():
@@ -35,17 +34,29 @@ def upload_file(request):
         f = request.FILES['file']
         filename = request.FILES['file'].name
         print(filename)
-
     response = {
         'score': "ok",
     }
     return JsonResponse(response)
 
 
+# 下载分析后的文件
+@csrf_exempt
+@require_http_methods(["GET"])
+def download(request):
+    the_file_name = 'result.zip'
+    the_file_path = get_zip(the_file_name)
+    zip_file = open(the_file_path, 'rb')
+    return_response = HttpResponse(zip_file, content_type='application/force-download')
+    return_response['Content-Disposition'] = 'attachment; filename="%s"' % the_file_name
+    return_response['Content-Description'] = 'File Transfer'
+    return_response['Content-Transfer-Enconding'] = 'binary'
+    return return_response
+
+
 # 返回该pdf的评分及所有关键词出现的次数
 @require_http_methods(["GET"])
 def get_rating(request):
-
     data = {
         'name': 'xxx.pdf',
         'score': 5,
