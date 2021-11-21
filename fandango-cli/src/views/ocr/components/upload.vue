@@ -78,7 +78,7 @@ export default {
         headers: {
           'Content-Type': 'application/json'
         },
-        url: '/api/file_upload/',
+        url: '/api/upload/',
         method: 'post',
         withCredentials: true,
         data: formData

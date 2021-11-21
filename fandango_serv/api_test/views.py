@@ -13,20 +13,6 @@ from .serv import handle_uploaded_file
 def index(request):
     return HttpResponse("Hello, world. You're at the fandango serv index.")
 
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def upload_file(request):
-    print(request)
-    print(request.POST)
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(request.FILES['name'], request.FILES['file'])
-            return HttpResponse("success")
-    return HttpResponse("failed")
-
-
 @csrf_exempt
 def file_upload(request):
     error_msg = ""

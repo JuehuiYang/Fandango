@@ -14,7 +14,7 @@
           <tag-form />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button type="primary" @click="keywordSubmit">提交</el-button>
           <el-button @click="onCancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -49,6 +49,7 @@
 <script>
 import TagForm from '@/views/ocr/components/tag'
 import Upload from '@/views/ocr/components/upload'
+import axios from 'axios'
 
 export default {
   components: {
@@ -65,13 +66,53 @@ export default {
         type: [],
         resource: '',
         desc: ''
-      }
+      },
+      keyword: ["we","think","MIT"]
     }
   },
   methods: {
-    onSubmit() {
+    /**
+     * 提交关键词
+     */
+    keywordSubmit() {
       this.$message('submit!')
+      const that = this
+      const data = {
+        keyword: keyword
+      }
+      if (this.checkItemModalData() === true) {
+        axios({
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          url: '/api/keyword/',
+          method: 'post',
+          withCredentials: true,
+          data: data
+        }).then(function (response) {
+          console.log(response)
+          if (response['status'] === 200) {
+            that.$Modal.success({
+              title: '成功',
+              content: '添加模组成功！'
+            })
+          } else {
+            that.$Modal.error({
+              title: '失败',
+              content: '服务器端出错，请检查！'
+            })
+          }
+        })
+      }
     },
+    
+    onSubmit() {
+      this.$message({
+        message: 'cancel!',
+        type: 'warning'
+      })
+    },
+
     onCancel() {
       this.$message({
         message: 'cancel!',
