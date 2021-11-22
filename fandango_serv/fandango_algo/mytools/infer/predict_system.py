@@ -236,7 +236,6 @@ def pdf2img2rec(pdf_path, prefix):
 def demo(output_path, pdf_st):
     # 输出文字
     r = pdf_st.get_txt()
-    print(r)
 
     # text pdf
     r = pdf_st.img2pdf("text")
@@ -250,6 +249,7 @@ def demo(output_path, pdf_st):
     r = pdf_st.img2pdf("origin")
     with open(os.path.join(output_path, "origin.pdf"), "wb") as f:
         f.write(r)
+
 
 
 if __name__ == "__main__":

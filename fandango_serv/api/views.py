@@ -5,7 +5,7 @@ import json
 
 # Create your views here.
 from api.forms import FileUploadForm
-from api.serv import handle_uploaded_file, setkeyword, get_zip
+from api.serv import handle_uploaded_file, set_keyword, get_zip, get_keyowrd_frequency
 
 
 def index(request):
@@ -19,8 +19,23 @@ def upload_keyword(request):
     postBody = request.body
     json_result = json.loads(postBody)
     keyword = json_result['keyword']
-    setkeyword(keyword)
-    return JsonResponse(json_result)
+    set_keyword(keyword)
+    response = {
+        'status': "ok",
+    }
+    return JsonResponse(response)
+
+
+# 获取词频
+@csrf_exempt
+@require_http_methods(["POST"])
+def get_frequency(request):
+    postBody = request.body
+    json_result = json.loads(postBody)
+    keyword = json_result['keyword']
+    set_keyword(keyword)
+    items = get_keyowrd_frequency(keyword)
+    return JsonResponse(items)
 
 
 # 接收上传的PDF文件
@@ -35,7 +50,7 @@ def upload_file(request):
         filename = request.FILES['file'].name
         print(filename)
     response = {
-        'score': "ok",
+        'status': "ok",
     }
     return JsonResponse(response)
 
@@ -56,11 +71,17 @@ def download(request):
 
 # 返回该pdf的评分及所有关键词出现的次数
 @require_http_methods(["GET"])
-def get_rating(request):
-    data = {
-        'name': 'xxx.pdf',
-        'score': 5,
-    }
+def get_rate(request):
+    data = [
+        {
+            'key': 'hello',
+            'count': 5,
+        },
+        {
+            'key': 'world',
+            'count': 10,
+        },
+    ]
     return JsonResponse(data)
 
 
