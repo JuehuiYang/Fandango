@@ -4,8 +4,10 @@ from django.http import JsonResponse, HttpResponse, StreamingHttpResponse
 import json
 
 # Create your views here.
+from typing import List
+
 from api.forms import FileUploadForm
-from api.serv import handle_uploaded_file, set_keyword, get_zip, get_keyowrd_frequency
+from api.serv import handle_uploaded_file, set_keyword, get_zip, get_key_count_items
 
 
 def index(request):
@@ -17,27 +19,32 @@ def index(request):
 @require_http_methods(["POST"])
 def upload_keyword(request):
     print("wwwwww")
-    postBody = request.body
-    json_result = json.loads(postBody)
-    keyword = json_result['keyword']
-    set_keyword(keyword)
+    print(request)
+    print(request.POST.get('keyword'))
+    keyword: str = request.POST.get('keyword')
+    keys = json.loads(keyword)
+    # keyword = json_result['keyword']
+    set_keyword(keys)
     response = {
         'status': "ok",
     }
-    return JsonResponse(response)
+    return JsonResponse(response, safe=False)
 
 
 # 获取词频
 @csrf_exempt
 @require_http_methods(["POST"])
 def get_frequency(request):
-    postBody = request.body
-    json_result = json.loads(postBody)
-    keyword = json_result['keyword']
+    keyword: List[str] = json.loads(request.POST.get('keyword'))
     set_keyword(keyword)
-    items = get_keyowrd_frequency(keyword)
+    items = get_key_count_items(keyword)
+
     print(items)
-    return JsonResponse(items)
+    response = {
+        'status': "ok",
+        'items': items,
+    }
+    return JsonResponse(response, safe=False)
 
 
 # 接收上传的PDF文件

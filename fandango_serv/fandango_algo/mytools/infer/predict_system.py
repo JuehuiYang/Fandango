@@ -190,7 +190,7 @@ def init_params(prefix):
     args.use_angle_cls = False
     args.use_space_char = True
     args.rec_char_dict_path = prefix + "./ppocr/utils/en_dict.txt"
-    args.use_gpu = True
+    args.use_gpu = False
     return args
 
 

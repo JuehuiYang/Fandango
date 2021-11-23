@@ -1,6 +1,10 @@
+import json
 import os
 import zipfile
-from typing import List, Any
+
+from typing import List, Dict
+
+import pandas
 
 from . import singleton
 from mytools.infer.predict_system import *
@@ -82,32 +86,39 @@ def set_keyword(keyword):
 
 
 # TODO 处理计算关键词出现频率
-def get_keyowrd_frequency(keywords: List[str]):
-    txts = [['MIT License', 'Copyright (c) 2021 JuehuiYang',
-             'Permission is hereby granted, free of charge, to any person obtaining a copy',
-             'of this software and associated documentation files (the "Software"), to deal',
-             'in the Software without restriction,including without limitation the rights',
-             'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
-             'copies of the Software, and to permit persons to whom the Software is',
-             'furnished to do so, subject to the following conditions:',
-             'The above copyright notice and this permission notice shall be included in all',
-             'copies or substantial portions of the Software.',
-             'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,EXPRESS OR',
-             'IMPLIEDINCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY',
-             'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE',
-             'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER',
-             'LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
-             'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE', 'SOFTWARE']]
+def get_key_count_items(keywords: List[str]):
+    texts = [['MIT License', 'Copyright (c) 2021 JuehuiYang',
+              'Permission is hereby granted, free of charge, to any person obtaining a copy',
+              'of this software and associated documentation files (the "Software"), to deal',
+              'in the Software without restriction,including without limitation the rights',
+              'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell',
+              'copies of the Software, and to permit persons to whom the Software is',
+              'furnished to do so, subject to the following conditions:',
+              'The above copyright notice and this permission notice shall be included in all',
+              'copies or substantial portions of the Software.',
+              'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,EXPRESS OR',
+              'IMPLIEDINCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY',
+              'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE',
+              'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER',
+              'LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
+              'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE', 'SOFTWARE']]
+
+    if singleton.txt is not None:
+        texts = singleton.txt
 
     lower_key: List[str] = [key.lower() for key in keywords]
-    frequency = {}
+    frequency: Dict[str, int] = {}
     for i in lower_key:
         frequency[i] = 0
 
-    for txt in txts[0]:
+    for txt in texts[0]:
         lower_txt = txt.lower()
         for key in lower_key:
             frequency[key] += lower_txt.count(key)
 
     singleton.frequency = frequency
-    return frequency
+    key_count_dict = pandas.DataFrame.from_dict(frequency, orient='index', columns=['count'])
+    key_count_dict = key_count_dict.reset_index().rename(columns={'index': 'key'})
+    items_json = key_count_dict.to_json(orient='records')
+    items = json.loads(items_json)
+    return items
