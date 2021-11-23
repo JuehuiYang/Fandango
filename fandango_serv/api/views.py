@@ -16,6 +16,7 @@ def index(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def upload_keyword(request):
+    print("wwwwww")
     postBody = request.body
     json_result = json.loads(postBody)
     keyword = json_result['keyword']
@@ -35,6 +36,7 @@ def get_frequency(request):
     keyword = json_result['keyword']
     set_keyword(keyword)
     items = get_keyowrd_frequency(keyword)
+    print(items)
     return JsonResponse(items)
 
 

@@ -1,62 +1,85 @@
 <template>
   <div class="app-container">
-    <el-card style="margin-top: 10px">
-      <el-steps :active="active" simple>
-        <el-step title="设置关键词" icon="shezhi1"/>
-        <el-step title="提交pdf" icon="el-icon-upload"/>
-        <el-step title="OCR识别" icon="el-icon-picture"/>
-      </el-steps>
+    <!--    <el-card style="margin-top: 10px">-->
+    <!--      <el-steps :active="active" simple>-->
+    <!--        <el-step title="提交pdf" icon="el-icon-upload"/>-->
+    <!--        <el-step title="设置关键词" icon="el-icon-upload"/>-->
+    <!--        <el-step title="OCR识别" icon="el-icon-picture"/>-->
+    <!--      </el-steps>-->
+    <!--    </el-card>-->
+    <el-card v-show="active === 0" style="margin-top: 10px;">
+      <div style="display: flex;justify-content:center;align-items: center;">
+        <upload/>
+      </div>
       <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
     </el-card>
-    <el-card v-show="active === 0" style="margin-top: 10px">
+    <el-card v-show="active === 1" style="margin-top: 10px">
+
       <el-form ref="form" :model="form">
         <el-form-item label="设置关键词">
-          <tag-form/>
+          <div class="tag-form">
+            <el-tag
+              v-for="tag in dynamicTags"
+              :key="tag"
+              closable
+              :disable-transitions="false"
+              @close="handleClose(tag)"
+            >
+              {{ tag }}
+            </el-tag>
+            <el-input
+              v-if="inputVisible"
+              ref="saveTagInput"
+              v-model="inputValue"
+              class="input-new-tag"
+              size="small"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm"
+            />
+            <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+          </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="keywordSubmit">提交</el-button>
-          <el-button @click="onCancel">取消</el-button>
+          <el-button type="primary" @click="tagSubmit">提交</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
-    <el-card v-show="active === 1" class="box">
-      <upload/>
+      <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
+      <el-button style="margin-top: 10px;" @click="active = 0">上一步</el-button>
     </el-card>
     <el-card v-show="active === 2" style="margin-top: 10px">
-      <p>展示OCR进度</p>
-      <el-progress :text-inside="true" :stroke-width="26" :percentage="70"/>
-      <el-progress :text-inside="true" :stroke-width="24" :percentage="100" status="success"/>
-      <el-progress :text-inside="true" :stroke-width="22" :percentage="80" status="warning"/>
-      <el-progress :text-inside="true" :stroke-width="20" :percentage="50" status="exception"/>
-    </el-card>
-    <el-card v-show="active === 3" style="margin-top: 10px">
       <span>1. 结果展示</span>
       <el-divider/>
       <span>2. 评分</span>
       <el-divider/>
       <span>3. 关键词出现次数</span>
+      <Table/>
       <el-divider/>
       <el-form ref="form" :model="form">
         <el-form-item>
           <el-button type="primary" @click="onDownload">获取识别结果</el-button>
         </el-form-item>
       </el-form>
+      <el-button style="margin-top: 10px;" @click="active = 1">上一步</el-button>
+      <el-button style="margin-top: 10px;" @click="active = 0">返回初始页面</el-button>
     </el-card>
   </div>
 </template>
 
 <script>
-import TagForm from '@/views/ocr/components/tag'
 import Upload from '@/views/ocr/components/upload'
+import Table from '@/views/ocr/components/table'
 import axios from 'axios'
 
 export default {
   components: {
-    TagForm,
-    Upload
+    Upload,
+    Table
   },
   data() {
     return {
+      dynamicTags: ['we', 'think', 'MIT'],
+      inputVisible: false,
+      inputValue: '',
       active: 0,
       value: 3.7,
       form: {
@@ -70,38 +93,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * 提交关键词
-     */
-    keywordSubmit() {
-      this.$message('submit!')
-      const that = this
-      const data = {
-        keyword: this.keyword
-      }
-      axios({
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        url: '/api/keyword/',
-        method: 'post',
-        withCredentials: true,
-        data: data
-      }).then(function(response) {
-        console.log(response)
-        if (response['status'] === 200) {
-          that.$Modal.success({
-            title: '成功',
-            content: '添加模组成功！'
-          })
-        } else {
-          that.$Modal.error({
-            title: '失败',
-            content: '服务器端出错，请检查！'
-          })
-        }
-      })
-    },
 
     onSubmit() {
       this.$message({
@@ -143,6 +134,53 @@ export default {
       console.log(this.active)
       if (this.active++ > 2) this.active = 0
       console.log(this.active)
+    },
+
+    handleClose(tag) {
+      this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
+    },
+
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+
+    handleInputConfirm() {
+      const inputValue = this.inputValue
+      if (inputValue) {
+        this.dynamicTags.push(inputValue)
+      }
+      this.inputVisible = false
+      this.inputValue = ''
+    },
+    tagSubmit() {
+      const that = this
+      const param = new URLSearchParams()
+      param.append('keyword', this.dynamicTags)
+      this.$message('submit!')
+      console.log('子组件')
+      axios({
+        url: '/api/keyword/',
+        method: 'post',
+        // withCredentials: true,
+        data: param
+      }).then(function(response) {
+        console.log(response)
+        if (response['status'] === 200) {
+          that.addPipelineModal = false
+          that.$Modal.success({
+            title: '成功',
+            content: '添加流水线成功！'
+          })
+        } else {
+          that.$Modal.error({
+            title: '失败',
+            content: '服务器端出错，请检查！'
+          })
+        }
+      })
     }
   }
 }
@@ -156,6 +194,24 @@ export default {
   margin-top: 10px;
   min-height: 500px;
   min-width: 100%;
+}
+
+.el-tag + .el-tag {
+  margin-left: 10px;
+}
+
+.button-new-tag {
+  margin-left: 10px;
+  height: 32px;
+  line-height: 30px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.input-new-tag {
+  width: 90px;
+  margin-left: 10px;
+  vertical-align: bottom;
 }
 </style>
 
