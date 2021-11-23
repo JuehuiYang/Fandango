@@ -9,7 +9,7 @@
     <!--    </el-card>-->
     <el-card v-show="active === 0" style="margin-top: 10px;">
       <div style="display: flex;justify-content:center;align-items: center;">
-        <upload/>
+        <upload />
       </div>
       <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
     </el-card>
@@ -48,12 +48,28 @@
     </el-card>
     <el-card v-show="active === 2" style="margin-top: 10px">
       <span>1. 结果展示</span>
-      <el-divider/>
+      <el-divider />
       <span>2. 评分</span>
-      <el-divider/>
+      <el-divider />
       <span>3. 关键词出现次数</span>
-      <Table/>
-      <el-divider/>
+      <div>
+        <el-table
+          :data="tableData"
+          style="width: 100%"
+        >
+          <el-table-column
+            prop="key"
+            label="关键词"
+            width="180"
+          />
+          <el-table-column
+            prop="count"
+            label="出现次数"
+            width="180"
+          />
+        </el-table>
+      </div>
+      <el-divider />
       <el-form ref="form" :model="form">
         <el-form-item>
           <el-button type="primary" @click="onDownload">获取识别结果</el-button>
@@ -67,13 +83,11 @@
 
 <script>
 import Upload from '@/views/ocr/components/upload'
-import Table from '@/views/ocr/components/table'
 import axios from 'axios'
 
 export default {
   components: {
-    Upload,
-    Table
+    Upload
   },
   data() {
     return {
@@ -83,13 +97,15 @@ export default {
       active: 0,
       value: 3.7,
       form: {
-        keyword: [],
         delivery: false,
         type: [],
         resource: '',
         desc: ''
       },
-      keyword: ['we', 'think', 'MIT']
+      tableData: [{
+        key: 'we',
+        count: 1
+      }]
     }
   },
   methods: {
@@ -155,31 +171,23 @@ export default {
       this.inputVisible = false
       this.inputValue = ''
     },
+
     tagSubmit() {
-      const that = this
-      const param = new URLSearchParams()
-      param.append('keyword', this.dynamicTags)
-      this.$message('submit!')
-      console.log('子组件')
+      const self = this
+      const formData = new FormData()
+      formData.append('keyword', JSON.stringify(this.dynamicTags))
       axios({
-        url: '/api/keyword/',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        url: '/api/frequency/',
         method: 'post',
-        // withCredentials: true,
-        data: param
+        withCredentials: true,
+        data: formData
       }).then(function(response) {
         console.log(response)
-        if (response['status'] === 200) {
-          that.addPipelineModal = false
-          that.$Modal.success({
-            title: '成功',
-            content: '添加流水线成功！'
-          })
-        } else {
-          that.$Modal.error({
-            title: '失败',
-            content: '服务器端出错，请检查！'
-          })
-        }
+        console.log(response.data.items)
+        self.tableData = response.data.items
       })
     }
   }

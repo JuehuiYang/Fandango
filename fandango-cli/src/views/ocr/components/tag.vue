@@ -44,7 +44,6 @@
 </style>
 
 <script>
-import axios from 'axios'
 
 export default {
   name: 'TagForm',
@@ -74,42 +73,6 @@ export default {
       }
       this.inputVisible = false
       this.inputValue = ''
-    },
-
-    submit: function() {
-      const that = this
-      this.$message('submit!')
-      console.log('子组件')
-      // const data = {
-      //   'keyword': this.dynamicTags
-      // }
-      const data = {
-        'keyword': ['we', 'free', 'mit']
-      }
-      console.log(data)
-      axios({
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        url: '/api/keyword/',
-        method: 'post',
-        withCredentials: true,
-        data: data
-      }).then(function(response) {
-        console.log(response)
-        if (response['status'] === 200) {
-          that.addPipelineModal = false
-          that.$Modal.success({
-            title: '成功',
-            content: '添加流水线成功！'
-          })
-        } else {
-          that.$Modal.error({
-            title: '失败',
-            content: '服务器端出错，请检查！'
-          })
-        }
-      })
     }
   }
 }

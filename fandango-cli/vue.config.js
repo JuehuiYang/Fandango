@@ -43,7 +43,7 @@ module.exports = {
         changeOrigin: true
       },
       '/ocr': {
-        target: 'http://127.0.0.1:8000/ocr',
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true
       }
     }
