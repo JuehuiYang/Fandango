@@ -16,7 +16,7 @@ import sys
 from PIL import Image
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 
-from mytools.infer import utility
+from fandango_algo.mytools.infer import utility
 
 sys.path.append(__dir__)
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../..')))
@@ -31,9 +31,9 @@ import traceback
 import paddle
 
 # import tools.infer.utility as utility
-from ppocr.postprocess import build_post_process
-from ppocr.utils.logging import get_logger
-from ppocr.utils.utility import get_image_file_list, check_and_read_gif
+from fandango_algo.ppocr.postprocess import build_post_process
+from fandango_algo.ppocr.utils.logging import get_logger
+from fandango_algo.ppocr.utils.utility import get_image_file_list, check_and_read_gif
 
 logger = get_logger()
 

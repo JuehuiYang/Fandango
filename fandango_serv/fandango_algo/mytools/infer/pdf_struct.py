@@ -1,4 +1,4 @@
-from pdf._img2pdf import *
+from fandango_algo.pdf._img2pdf import *
 
 
 class pdf_struct():

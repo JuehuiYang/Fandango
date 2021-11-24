@@ -27,13 +27,13 @@ import numpy as np
 import time
 import logging
 from PIL import Image
-import mytools.infer.utility as utility
-import mytools.infer.predict_rec as predict_rec
-import mytools.infer.predict_det as predict_det
-import mytools.infer.predict_cls as predict_cls
-from ppocr.utils.utility import get_image_file_list, check_and_read_gif
-from ppocr.utils.logging import get_logger
-from mytools.infer.utility import draw_ocr_box_txt, get_rotate_crop_image
+import fandango_algo.mytools.infer.utility as utility
+import fandango_algo.mytools.infer.predict_rec as predict_rec
+import fandango_algo.mytools.infer.predict_det as predict_det
+import fandango_algo.mytools.infer.predict_cls as predict_cls
+from fandango_algo.ppocr.utils.utility import get_image_file_list, check_and_read_gif
+from fandango_algo.ppocr.utils.logging import get_logger
+from fandango_algo.mytools.infer.utility import draw_ocr_box_txt, get_rotate_crop_image
 
 logger = get_logger()
 
@@ -113,8 +113,8 @@ def sorted_boxes(dt_boxes):
     return _boxes
 
 
-from pdf._pdf2img import *
-from pdf._imgList import *
+from fandango_algo.pdf._pdf2img import *
+from fandango_algo.pdf._imgList import *
 
 
 def reg(args, IMG):
@@ -187,6 +187,7 @@ def init_params(prefix):
     args.det_model_dir = prefix + "./inference/en_ppocr_mobile_v2.0_det_infer/"
     args.rec_model_dir = prefix + "./inference/en_number_mobile_v2.0_rec_infer/"
     args.cls_model_dir = prefix + "./inference/ch_ppocr_mobile_v2.0_cls_infer/"
+    args.vis_font_path = "./doc/fonts/simfang.ttf"
     args.use_angle_cls = False
     args.use_space_char = True
     args.rec_char_dict_path = prefix + "./ppocr/utils/en_dict.txt"
@@ -194,7 +195,7 @@ def init_params(prefix):
     return args
 
 
-from mytools.infer.pdf_struct import pdf_struct
+from fandango_algo.mytools.infer.pdf_struct import pdf_struct
 
 
 def pdf2img2rec(pdf_path, prefix):

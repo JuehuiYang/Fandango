@@ -22,7 +22,7 @@ from PIL import Image, ImageDraw, ImageFont
 import math
 from paddle import inference
 import time
-from ppocr.utils.logging import get_logger
+from fandango_algo.ppocr.utils.logging import get_logger
 
 from easydict import EasyDict as edict
 def str2bool(v):
