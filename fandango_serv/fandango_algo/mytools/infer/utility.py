@@ -25,77 +25,78 @@ import time
 from ppocr.utils.logging import get_logger
 
 from easydict import EasyDict as edict
+
+
 def str2bool(v):
     return v.lower() in ("true", "t", "1")
 
 
 def init_args():
-    d=edict()
+    d = edict()
     # parser = argparse.ArgumentParser()
     # params for prediction engine
 
-    d.use_gpu=True
-    d.ir_optim=True
-    d.use_tensorrt=False
-    d.min_subgraph_size=15
-    d.precision="fp32"
-    d.gpu_mem=500
+    d.use_gpu = True
+    d.ir_optim = True
+    d.use_tensorrt = False
+    d.min_subgraph_size = 15
+    d.precision = "fp32"
+    d.gpu_mem = 500
     # params for text detector
-    d.image_dir=""
-    d.det_algorithm='DB'
-    d.det_model_dir=""
-    d.det_limit_side_len=960
-    d.det_limit_type='max'
+    d.image_dir = ""
+    d.det_algorithm = 'DB'
+    d.det_model_dir = ""
+    d.det_limit_side_len = 960
+    d.det_limit_type = 'max'
 
     # DB parmas
-    d.det_db_thresh=0.2
-    d.det_db_box_thresh=0.5
-    d.det_db_unclip_ratio=2.2
-    d.max_batch_size=10
-    d.use_dilation=False
-    d.det_db_score_mode="fast"
+    d.det_db_thresh = 0.2
+    d.det_db_box_thresh = 0.5
+    d.det_db_unclip_ratio = 2.2
+    d.max_batch_size = 10
+    d.use_dilation = False
+    d.det_db_score_mode = "fast"
 
-    d.rec_algorithm='CRNN'
-    d.rec_model_dir=""
-    d.rec_image_shape="3,32,320"
-    d.rec_char_type='ch'
-    d.rec_batch_num=6
-    d.max_text_length=25
-    d.rec_char_dict_path="./ppocr/utils/ppocr_keys_v1.txt"
-    d.use_space_char=True
-    d.vis_font_path="./doc/fonts/simfang.ttf"
-    d.drop_score=0.5
+    d.rec_algorithm = 'CRNN'
+    d.rec_model_dir = ""
+    d.rec_image_shape = "3,32,320"
+    d.rec_char_type = 'ch'
+    d.rec_batch_num = 6
+    d.max_text_length = 25
+    d.rec_char_dict_path = "./ppocr/utils/ppocr_keys_v1.txt"
+    d.use_space_char = True
+    d.vis_font_path = "./doc/fonts/simfang.ttf"
+    d.drop_score = 0.5
 
-    d.e2e_algorithm='PGNet'
-    d.e2e_model_dir=""
-    d.e2e_limit_side_len=768
-    d.e2e_limit_type='max'
+    d.e2e_algorithm = 'PGNet'
+    d.e2e_model_dir = ""
+    d.e2e_limit_side_len = 768
+    d.e2e_limit_type = 'max'
 
+    d.e2e_pgnet_score_thresh = 0.5
+    d.e2e_char_dict_path = "./ppocr/utils/ic15_dict.txt"
+    d.e2e_pgnet_valid_set = "totaltext"
+    d.e2e_pgnet_polygon = True
+    d.e2e_pgnet_mode = 'fast'
 
-    d.e2e_pgnet_score_thresh=0.5
-    d.e2e_char_dict_path="./ppocr/utils/ic15_dict.txt"
-    d.e2e_pgnet_valid_set="totaltext"
-    d.e2e_pgnet_polygon=True
-    d.e2e_pgnet_mode='fast'
+    d.use_angle_cls = False
+    d.cls_image_shape = "3, 48, 192"
+    d.label_list = ['0', '180']
+    d.cls_batch_num = 6
+    d.cls_thresh = 0.9
 
-    d.use_angle_cls=False
-    d.cls_image_shape="3, 48, 192"
-    d.label_list=['0', '180']
-    d.cls_batch_num=6
-    d.cls_thresh=0.9
-
-    d.enable_mkldnn=False
-    d.cpu_threads=10
-    d.use_pdserving=False
-    d.warmup=True
+    d.enable_mkldnn = False
+    d.cpu_threads = 10
+    d.use_pdserving = False
+    d.warmup = True
 
     # multi-process
-    d.use_mp=False
-    d.total_process_num=1
-    d.process_id=0
-    d.benchmark=False
-    d.save_log_path="./log_output/"
-    d.show_log=True
+    d.use_mp = False
+    d.total_process_num = 1
+    d.process_id = 0
+    d.benchmark = False
+    d.save_log_path = "./log_output/"
+    d.show_log = True
 
     return d
 
@@ -363,7 +364,7 @@ def draw_ocr_box_txt(image,
                      txts,
                      scores=None,
                      drop_score=0.5,
-                     font_path="./doc/simfang.ttf"):
+                     font_path=ImageFont.load_default()):
     h, w = image.height, image.width
     img_left = image.copy()
     img_right = Image.new('RGB', (w, h), (255, 255, 255))
@@ -385,10 +386,10 @@ def draw_ocr_box_txt(image,
                 box[2][1], box[3][0], box[3][1]
             ],
             outline=color)
-        box_height = math.sqrt((box[0][0] - box[3][0])**2 + (box[0][1] - box[3][
-            1])**2)
-        box_width = math.sqrt((box[0][0] - box[1][0])**2 + (box[0][1] - box[1][
-            1])**2)
+        box_height = math.sqrt((box[0][0] - box[3][0]) ** 2 + (box[0][1] - box[3][
+            1]) ** 2)
+        box_width = math.sqrt((box[0][0] - box[1][0]) ** 2 + (box[0][1] - box[1][
+            1]) ** 2)
         if box_height > 2 * box_width:
             font_size = max(int(box_width * 0.9), 10)
             font = ImageFont.truetype(font_path, font_size, encoding="utf-8")
@@ -407,7 +408,7 @@ def draw_ocr_box_txt(image,
     img_show = Image.new('RGB', (w * 2, h), (255, 255, 255))
     img_show.paste(img_left, (0, 0, w, h))
     img_show.paste(img_right, (w, 0, w * 2, h))
-    return np.array(img_left),np.array(img_right)
+    return np.array(img_left), np.array(img_right)
 
 
 def str_count(s):
