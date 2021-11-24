@@ -187,7 +187,7 @@ def init_params(prefix):
     args.det_model_dir = prefix + "./inference/en_ppocr_mobile_v2.0_det_infer/"
     args.rec_model_dir = prefix + "./inference/en_number_mobile_v2.0_rec_infer/"
     args.cls_model_dir = prefix + "./inference/ch_ppocr_mobile_v2.0_cls_infer/"
-    args.vis_font_path = "./doc/fonts/simfang.ttf"
+    args.vis_font_path = prefix + "./doc/fonts/simfang.ttf"
     args.use_angle_cls = False
     args.use_space_char = True
     args.rec_char_dict_path = prefix + "./ppocr/utils/en_dict.txt"
