@@ -8,6 +8,7 @@ import pandas
 
 from . import singleton
 from fandango_algo.mytools.infer.predict_system import *
+from .singleton import Singleton
 
 input_abspath = os.path.join(os.getcwd(), 'input')
 output_abspath = os.path.join(os.getcwd(), 'output')
@@ -31,9 +32,9 @@ def handle_uploaded_file(f):
 def reg_it(content: bytes, output_path: str, prefix: str):
     output = pdf2img2rec(content, prefix)
     demo(output_path, output)
-    txt = output.get_txt()
+    txt: object = output.get_txt()
+    Singleton.txt = output.get_txt()
     print(txt)
-    singleton.txt = output.get_txt()
 
 
 # 对文件进行分析
@@ -103,8 +104,8 @@ def get_key_count_items(keywords: List[str]):
               'LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,',
               'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE', 'SOFTWARE']]
 
-    if singleton.txt is not None:
-        texts = singleton.txt
+    if Singleton.txt is not None:
+        texts = Singleton.txt
 
     lower_key: List[str] = [key.lower() for key in keywords]
     frequency: Dict[str, int] = {}
