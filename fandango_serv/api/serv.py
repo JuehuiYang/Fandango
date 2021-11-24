@@ -7,7 +7,7 @@ from typing import List, Dict
 import pandas
 
 from . import singleton
-from mytools.infer.predict_system import *
+from fandango_algo.mytools.infer.predict_system import *
 
 input_abspath = os.path.join(os.getcwd(), 'input')
 output_abspath = os.path.join(os.getcwd(), 'output')
