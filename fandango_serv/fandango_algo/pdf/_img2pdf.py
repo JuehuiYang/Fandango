@@ -25,14 +25,18 @@ def pic2pdf(imglist, pdf_path, pdf_name):
     for i,img in enumerate(imglist):
         cv2.imwrite(f"./{name}/{i}.png",img)
     doc = fitz.open()
-    for img in sorted(glob.glob(f"./{name}" + "\*.png")):
+    #imgdir=os.listdir(f"./{name}")
+    #print(imgdir)
+    for img in sorted(glob.glob(f"./{name}" + "/*.png")):
         imgdoc = fitz.open(img)
+        print(1)
         pdfbytes = imgdoc.convertToPDF()
         imgpdf = fitz.open("pdf", pdfbytes)
         doc.insertPDF(imgpdf)
-    doc.save(os.path.join(f"./{name}",pdf_path))
+    print(pdf_path)
+    doc.save(os.path.join(f"./{name}",pdf_name))
     doc.close()
-    with open(os.path.join(f"./{name}",pdf_path),"rb") as f:
+    with open(os.path.join(f"./{name}",pdf_name),"rb") as f:
         c=f.read()
     shutil.rmtree(f"./{name}")
     return c
