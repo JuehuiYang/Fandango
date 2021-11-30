@@ -59,7 +59,6 @@ def get_zip(name: str):
 
 def file2zip(zip_file_name: str, file_names: list):
     """ 将多个文件夹中文件压缩存储为zip
-
     :param zip_file_name:   /root/Document/test.zip
     :param file_names:      ['/root/user/doc/test.txt', ...]
     :return:
@@ -69,15 +68,7 @@ def file2zip(zip_file_name: str, file_names: list):
     with zipfile.ZipFile(zip_file_name, mode='w', compression=zipfile.ZIP_DEFLATED) as zf:
         for fn in file_names:
             parent_path, name = os.path.split(fn)
-
-            # zipfile 内置提供的将文件压缩存储在.zip文件中， arcname即zip文件中存入文件的名称
-            # 给予的归档名为 arcname (默认情况下将与 filename 一致，但是不带驱动器盘符并会移除开头的路径分隔符)
             zf.write(fn, arcname=name)
-
-            # 等价于以下两行代码
-            # 切换目录， 直接将文件写入。不切换目录，则会在压缩文件中创建文件的整个路径
-            # os.chdir(parent_path)
-            # zf.write(name)
 
 
 # 设置关键词
