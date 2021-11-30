@@ -5,12 +5,12 @@
   >
     <el-table-column
       prop="key"
-      label="关键词"
+      label="keyword"
       width="180"
     />
     <el-table-column
       prop="count"
-      label="出现次数"
+      label="count"
       width="180"
     />
   </el-table>

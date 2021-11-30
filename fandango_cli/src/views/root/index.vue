@@ -1,6 +1,8 @@
 <template>
   <div class="root-container">
-    <div class="root-text">项目介绍</div>
+    <div class="root-text">Fandango</div>
+    <el-divider></el-divider>
+    <span>Fandango is an Online OCR service that allows you to extract text from PDF files and mark keywords to give ratings.</span>
   </div>
 </template>
 

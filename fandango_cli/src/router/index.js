@@ -76,9 +76,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        name: 'OcrSplineDemo',
+        name: 'ocr',
         component: () => import('@/views/ocr/index'),
-        meta: { title: 'OCR识别', icon: 'form' }
+        meta: { title: 'ocr', icon: 'form' }
       }
     ]
   },

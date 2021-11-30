@@ -1,22 +1,15 @@
 <template>
   <div class="app-container">
-    <!--    <el-card style="margin-top: 10px">-->
-    <!--      <el-steps :active="active" simple>-->
-    <!--        <el-step title="提交pdf" icon="el-icon-upload"/>-->
-    <!--        <el-step title="设置关键词" icon="el-icon-upload"/>-->
-    <!--        <el-step title="OCR识别" icon="el-icon-picture"/>-->
-    <!--      </el-steps>-->
-    <!--    </el-card>-->
     <el-card v-show="active === 0" style="margin-top: 10px;">
       <div style="display: flex;justify-content:center;align-items: center;">
-        <upload />
+        <upload/>
       </div>
-      <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
+      <el-button style="margin-top: 10px;" @click="next">next step</el-button>
     </el-card>
     <el-card v-show="active === 1" style="margin-top: 10px">
 
       <el-form ref="form" :model="form">
-        <el-form-item label="设置关键词">
+        <el-form-item label="Set keywords">
           <div class="tag-form">
             <el-tag
               v-for="tag in dynamicTags"
@@ -40,18 +33,24 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="tagSubmit">提交</el-button>
+          <el-button type="primary" @click="tagSubmit">submit</el-button>
         </el-form-item>
       </el-form>
-      <el-button style="margin-top: 10px;" @click="next">下一步</el-button>
-      <el-button style="margin-top: 10px;" @click="active = 0">上一步</el-button>
+      <el-button style="margin-top: 10px;" @click="active = 0">previous step</el-button>
+      <el-button style="margin-top: 10px;" @click="next">next step</el-button>
     </el-card>
     <el-card v-show="active === 2" style="margin-top: 10px">
-      <span>1. 结果展示</span>
-      <el-divider />
-      <span>2. 评分</span>
-      <el-divider />
-      <span>3. 关键词出现次数</span>
+      <span>score</span>
+      <el-rate
+        v-model="value"
+        disabled
+        show-score
+        text-color="#ff9900"
+        score-template="{value}"
+      >
+      </el-rate>
+      <el-divider/>
+      <span>Keyword occurrences</span>
       <div>
         <el-table
           :data="tableData"
@@ -59,24 +58,24 @@
         >
           <el-table-column
             prop="key"
-            label="关键词"
+            label="keyword"
             width="180"
           />
           <el-table-column
             prop="count"
-            label="出现次数"
+            label="count"
             width="180"
           />
         </el-table>
       </div>
-      <el-divider />
+      <el-divider/>
       <el-form ref="form" :model="form">
         <el-form-item>
-          <el-button type="primary" @click="onDownload">获取识别结果</el-button>
+          <el-button type="primary" @click="onDownload">result</el-button>
         </el-form-item>
       </el-form>
-      <el-button style="margin-top: 10px;" @click="active = 1">上一步</el-button>
-      <el-button style="margin-top: 10px;" @click="active = 0">返回初始页面</el-button>
+      <el-button style="margin-top: 10px;" @click="active = 1">previous step</el-button>
+      <el-button style="margin-top: 10px;" @click="active = 0">back</el-button>
     </el-card>
   </div>
 </template>
@@ -109,21 +108,6 @@ export default {
     }
   },
   methods: {
-
-    onSubmit() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
-    },
-
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
-      })
-    },
-
     onDownload() {
       this.$message('download!')
       axios({
@@ -189,6 +173,10 @@ export default {
         console.log(response.data.items)
         self.tableData = response.data.items
       })
+    },
+
+    getScore() {
+      console.log('3.7')
     }
   }
 }
