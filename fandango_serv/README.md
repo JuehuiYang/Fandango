@@ -1,5 +1,7 @@
 # fandango-serv
 
+English | [简体中文](./README-zh.md)
+
 ## build step
 
 ```bash
