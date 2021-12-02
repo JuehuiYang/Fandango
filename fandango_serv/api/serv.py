@@ -52,6 +52,7 @@ def get_zip(name: str):
         os.path.join(output_abspath, 'origin.pdf'),
         os.path.join(output_abspath, 'box.pdf'),
         os.path.join(output_abspath, 'text.pdf'),
+        os.path.join(output_abspath, 'text.txt'),
     ]
     file2zip(zip_path, files)
     return zip_path
