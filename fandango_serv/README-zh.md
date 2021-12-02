@@ -1,17 +1,17 @@
 # fandango-serv
 
-## build step
+## 构建
 
 ```bash
-# clone the project
+# 克隆项目
 git clone https://github.com/JuehuiYang/Fandango.git
 
-# enter the project directory
+# 进入项目目录
 cd Fandango/fandango_cli
 
-# Install
+# 安装所需python库
 pip install -r requirement.txt
 
-# run the project
+# 启动服务
 python manage.py runserver
 ```
